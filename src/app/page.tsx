@@ -1,103 +1,131 @@
-import Image from "next/image";
+// src/app/page.tsx
+"use client";
 
-export default function Home() {
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowRight, Heart, Target, Calendar } from 'lucide-react';
+import CountUp from 'react-countup';
+
+export default function HomePage() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="flex flex-col items-center overflow-x-hidden">
+      {/* Hero Section */}
+      <section
+        className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center text-center text-white relative"
+        style={{ backgroundImage: `url('/hero-background.jpg')` }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
+        <div className="relative z-10 p-4 animate-fade-in-up">
+          <h1 className="text-6xl md:text-8xl font-extrabold tracking-tight text-shadow-lg">
+            SAMARPAN
+          </h1>
+          <p className="mt-4 text-xl md:text-2xl font-light tracking-wider text-shadow">
+            EK SOCH, EK VISWAS
+          </p>
+          <Link href="/donate" passHref>
+            <Button size="lg" className="mt-8 text-lg px-8 py-6 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:opacity-90 transition-opacity transform hover:scale-105">
+              Donate Now
+            </Button>
+          </Link>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* Social Message Section */}
+      <section className="w-full max-w-5xl text-center py-24 px-6">
+        <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-800">
+          ALL CHILDREN DESERVE AN OPPORTUNITY TO SUCCEED IN LIFE
+        </h2>
+        <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+          An NGO of Haldia Institute of Technology, marching forward with the thirst of providing free primary education to the needy children of nearby areas.
+        </p>
+      </section>
+
+      {/* Core Focus Section */}
+      <section className="w-full bg-gradient-to-b from-slate-50 to-white py-24 px-6">
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="text-center border-t-4 border-transparent hover:border-orange-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <CardHeader className="items-center">
+              <div className="p-4 bg-orange-100 rounded-full">
+                <Target className="h-8 w-8 text-orange-600" />
+              </div>
+              <CardTitle className="pt-4">Our Mission</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">We aim to create a positive change by imparting the basic tool necessary for growth: Education.</p>
+              <Link href="/about" passHref>
+                <Button variant="link" className="px-0 mt-4 text-orange-600">
+                  Read More <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center border-t-4 border-transparent hover:border-yellow-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <CardHeader className="items-center">
+               <div className="p-4 bg-yellow-100 rounded-full">
+                <Calendar className="h-8 w-8 text-yellow-600" />
+              </div>
+              <CardTitle className="pt-4">Our Events</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">From educational drives to community gatherings, see the moments that define our journey.</p>
+               <Link href="/events" passHref>
+                <Button variant="link" className="px-0 mt-4 text-yellow-600">
+                  View Events <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center border-t-4 border-transparent hover:border-red-500 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <CardHeader className="items-center">
+               <div className="p-4 bg-red-100 rounded-full">
+                <Heart className="h-8 w-8 text-red-600" />
+              </div>
+              <CardTitle className="pt-4">Get Involved</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Your support can empower children with books, learning materials, and a brighter future.</p>
+              <Link href="/donate" passHref>
+                <Button variant="link" className="px-0 mt-4 text-red-600">
+                  Support Us <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Impact Section with Animated Counters */}
+      <section className="w-full py-24 px-6 bg-slate-900 text-white">
+        <div className="container mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Our Impact in Numbers</h2>
+          <p className="mt-4 text-lg text-slate-400 max-w-3xl mx-auto">
+            Every number tells a story of a life changed, a future brightened, and a community strengthened.
+          </p>
+          <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <div className="p-4">
+              <h3 className="text-5xl font-extrabold text-orange-500">
+                <CountUp end={150} duration={3} enableScrollSpy scrollSpyOnce />+
+              </h3>
+              <p className="mt-2 text-slate-300 text-lg">Children Educated</p>
+            </div>
+            <div className="p-4">
+              <h3 className="text-5xl font-extrabold text-yellow-500">
+                <CountUp end={50} duration={3} enableScrollSpy scrollSpyOnce />+
+              </h3>
+              <p className="mt-2 text-slate-300 text-lg">Events Organized</p>
+            </div>
+            <div className="p-4">
+              <h3 className="text-5xl font-extrabold text-red-500">
+                <CountUp end={500} duration={3} enableScrollSpy scrollSpyOnce />+
+              </h3>
+              <p className="mt-2 text-slate-300 text-lg">Volunteers Engaged</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
