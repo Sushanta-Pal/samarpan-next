@@ -32,8 +32,7 @@ const dummyImages = [
     "https://placehold.co/1280x720/EF4444/FFFFFF?text=Event+Image+3",
 ];
 
-export default function EventDetailPage({ params }: EventDetailPageProps) {
-  const { id } = params;
+export default function EventDetailPage({ params: { id } }: EventDetailPageProps) {
   const [event, setEvent] = React.useState<DetailedEvent | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -92,7 +91,8 @@ export default function EventDetailPage({ params }: EventDetailPageProps) {
   return (
     <main className="flex flex-col items-center bg-white">
       {/* Event Hero Section */}
-      <section className="w-full h-80 bg-cover bg-center relative text-white flex items-center justify-center text-center" style={{backgroundImage: `url(${event.imageUrls[0]})`}}>
+      <section className="w-full h-80 bg-cover bg-center relative text-white flex items-center justify-center text-center">
+          <Image src={event.imageUrls[0]} alt={event.title} fill className="object-cover z-0" priority />
           <div className="absolute inset-0 bg-black/60" />
           <div className="container relative z-10">
               {event.category && (
