@@ -20,11 +20,6 @@ type DetailedEvent = {
   category?: "Past Event" | "Upcoming";
 };
 
-// Define an interface for the page props to satisfy TypeScript
-interface EventDetailPageProps {
-    params: { id: string };
-}
-
 // --- Dummy Images for Fallback ---
 const dummyImages = [
     "https://placehold.co/1280x720/F97316/FFFFFF?text=Event+Image+1",
@@ -32,7 +27,8 @@ const dummyImages = [
     "https://placehold.co/1280x720/EF4444/FFFFFF?text=Event+Image+3",
 ];
 
-export default function EventDetailPage({ params: { id } }: EventDetailPageProps) {
+export default function EventDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [event, setEvent] = React.useState<DetailedEvent | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
