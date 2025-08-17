@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Instagram, Facebook, Linkedin, Mail, MapPin } from "lucide-react";
@@ -13,7 +13,6 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically handle form submission (e.g., send to an API)
     toast({
       title: "Message Sent!",
       description: "Thank you for reaching out. We will get back to you soon.",
@@ -27,7 +26,7 @@ export default function ContactPage() {
         <div className="container">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-slate-800">Get in Touch</h1>
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            We'd love to hear from you. Whether you have a question, a suggestion, or want to volunteer, feel free to reach out.
+            We&apos;d love to hear from you. Whether you have a question, a suggestion, or want to volunteer, feel free to reach out.
           </p>
         </div>
       </section>

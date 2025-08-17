@@ -1,8 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  devIndicators: {
-    buildActivity: false,
-  },
+  devIndicators:false,
   images: {
     remotePatterns: [
       {
@@ -13,8 +11,8 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
-      // Add your Supabase project URL hostname here
-      // Example: { protocol: 'https', hostname: 'your-project-id.supabase.co' }
+      { protocol: 'https',
+       hostname: 'qiublqgywyleulcpxmyq.supabase.co' }
     ],
   },
 };

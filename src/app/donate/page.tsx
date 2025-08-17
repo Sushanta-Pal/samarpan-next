@@ -3,10 +3,12 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Heart, IndianRupee, Landmark } from "lucide-react";
+import qrCodeImage from "../../../public/QR.png"; // Import the static image
 
 export default function DonatePage() {
   return (
@@ -17,7 +19,7 @@ export default function DonatePage() {
         <div className="container relative">
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight">Empower a Future</h1>
           <p className="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
-            Your contribution, no matter the size, can light up a child's life with the gift of education.
+            Your contribution, no matter the size, can light up a child&apos;s life with the gift of education.
           </p>
         </div>
       </section>
@@ -37,7 +39,7 @@ export default function DonatePage() {
                   <IndianRupee className="h-6 w-6 text-orange-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-slate-700">₹500 - Sponsor a Child's Books</h3>
+                  <h3 className="font-semibold text-slate-700">₹500 - Sponsor a Child&apos;s Books</h3>
                   <p className="text-muted-foreground text-sm">Provides a complete set of notebooks and textbooks for one child for an entire academic year.</p>
                 </div>
               </div>
@@ -51,11 +53,11 @@ export default function DonatePage() {
                 </div>
               </div>
             </div>
-             <Link href="https://docs.google.com/forms/d/e/1FAIpQLSf09XecxdMAJSaEYEFTUtFZ7lc5_ZzoAUOW8cg1OjIlKyX81A/viewform" target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="mt-8 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:opacity-90 transition-opacity">
-                    <Heart className="mr-2 h-5 w-5" /> Fill Donation Form
-                </Button>
-            </Link>
+             <Button size="lg" className="mt-8 bg-gradient-to-r from-orange-500 to-yellow-500 text-white hover:opacity-90 transition-opacity" asChild>
+              <Link href="https://docs.google.com/forms/d/e/1FAIpQLSf09XecxdMAJSaEYEFTUtFZ7lc5_ZzoAUOW8cg1OjIlKyX81A/viewform" target="_blank" rel="noopener noreferrer">
+                  <Heart className="mr-2 h-5 w-5" /> Fill Donation Form
+              </Link>
+            </Button>
           </div>
 
           {/* Right Side: How to Donate */}
@@ -68,8 +70,7 @@ export default function DonatePage() {
                 {/* QR Code */}
                 <div className="text-center">
                   <h3 className="font-semibold">Scan to Pay with UPI</h3>
-                  {/* Updated img src to point to the public folder */}
-                  <img src="/QR.png" alt="Donation QR Code" className="w-48 h-48 mx-auto mt-2 rounded-lg" />
+                  <Image src={qrCodeImage} alt="Donation QR Code" className="w-48 h-48 mx-auto mt-2 rounded-lg" />
                 </div>
                 
                 {/* Bank Transfer */}
