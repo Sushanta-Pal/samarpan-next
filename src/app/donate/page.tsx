@@ -69,7 +69,7 @@ export default function DonatePage() {
                 <div className="text-center">
                   <h3 className="font-semibold">Scan to Pay with UPI</h3>
                   {/* Updated img src to point to the public folder */}
-                  <img src="/QR.jpeg" alt="Donation QR Code" className="w-48 h-48 mx-auto mt-2 rounded-lg" />
+                  <img src="/QR.png" alt="Donation QR Code" className="w-48 h-48 mx-auto mt-2 rounded-lg" />
                 </div>
                 
                 {/* Bank Transfer */}

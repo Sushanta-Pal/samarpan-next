@@ -6,26 +6,20 @@ import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/lib/supabase";
 
-// Define the structure of an Event
+// Define the structure of an Event (category is now optional)
 type Event = {
-  id: string;
+  id: number;
   title: string;
   date: string;
-  description: string;
-  imageUrl: string;
-  category: "Past Event" | "Upcoming";
+  contents: string;
+  imageUrls: string[];
+  category?: "Past Event" | "Upcoming";
 };
 
-// --- Mock Data ---
-const mockEvents: Event[] = [
-  { id: "annual-day-2024", title: "Annual Day Celebration 2024", date: "August 15, 2024", description: "A day of fun, performances, and celebration with the children, showcasing their talents.", imageUrl: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2069&auto=format&fit=crop", category: "Upcoming" },
-  { id: "sports-fest", title: "Sports Fest", date: "July 20, 2024", description: "An exciting day of sports and games, promoting teamwork and physical fitness.", imageUrl: "https://images.unsplash.com/photo-1579952363873-27f3bade974d?q=80&w=1935&auto=format&fit=crop", category: "Past Event" },
-  { id: "art-workshop", title: "Art & Craft Workshop", date: "June 05, 2024", description: "A creative workshop where children explored their artistic talents through painting and crafts.", imageUrl: "https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2071&auto=format&fit=crop", category: "Past Event" },
-  { id: "science-fair", title: "Annual Science Fair", date: "May 10, 2024", description: "Showcasing innovative science projects and experiments by our bright young minds.", imageUrl: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1928&auto=format&fit=crop", category: "Past Event" },
-];
-// --- End Mock Data ---
-
+// --- Dummy Image for Fallback ---
+const dummyImage = "https://placehold.co/600x800/F97316/FFFFFF?text=Event";
 
 // A reusable component for the loading skeleton
 const EventCardSkeleton = () => (
@@ -33,35 +27,43 @@ const EventCardSkeleton = () => (
 );
 
 // The new, enhanced Event Card component
-const EventCard = ({ event }: { event: Event }) => (
-    <Link href={`/events/${event.id}`}>
-        <div className="group relative overflow-hidden rounded-lg shadow-lg h-96 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-            <img src={event.imageUrl} alt={event.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            
-            <div className="absolute top-4 right-4">
-                 <Badge variant={event.category === 'Upcoming' ? 'default' : 'secondary'} className={event.category === 'Upcoming' ? 'bg-orange-500 text-white' : ''}>
-                    {event.category}
-                </Badge>
-            </div>
+const EventCard = ({ event }: { event: Event }) => {
+    const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
+        year: 'numeric', month: 'long', day: 'numeric'
+    });
 
-            <div className="absolute bottom-0 left-0 p-6 text-white w-full">
-                <div className="flex items-center gap-2 text-sm text-slate-300">
-                    <Calendar size={16} />
-                    <span>{event.date}</span>
-                </div>
-                <h3 className="text-2xl font-bold mt-2">{event.title}</h3>
-                <p className="mt-2 text-slate-200 text-sm max-h-0 opacity-0 group-hover:max-h-20 group-hover:opacity-100 transition-all duration-500 ease-in-out">
-                    {event.description}
-                </p>
-                <div className="mt-4 flex items-center gap-2 text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <span>Read More</span>
-                    <ArrowRight size={16} />
+    return (
+        <Link href={`/events/${event.id}`}>
+            <div className="group relative overflow-hidden rounded-lg shadow-lg h-96 transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <img src={event.imageUrls[0]} alt={event.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                
+                {event.category && (
+                    <div className="absolute top-4 right-4">
+                         <Badge variant={event.category === 'Upcoming' ? 'default' : 'secondary'} className={event.category === 'Upcoming' ? 'bg-orange-500 text-white' : ''}>
+                            {event.category}
+                        </Badge>
+                    </div>
+                )}
+
+                <div className="absolute bottom-0 left-0 p-6 text-white w-full">
+                    <div className="flex items-center gap-2 text-sm text-slate-300">
+                        <Calendar size={16} />
+                        <span>{formattedDate}</span>
+                    </div>
+                    <h3 className="text-2xl font-bold mt-2">{event.title}</h3>
+                    <p className="mt-2 text-slate-200 text-sm max-h-0 opacity-0 group-hover:max-h-20 group-hover:opacity-100 transition-all duration-500 ease-in-out">
+                        {event.contents}
+                    </p>
+                    <div className="mt-4 flex items-center gap-2 text-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <span>Read More</span>
+                        <ArrowRight size={16} />
+                    </div>
                 </div>
             </div>
-        </div>
-    </Link>
-);
+        </Link>
+    );
+};
 
 
 export default function EventsPage() {
@@ -69,13 +71,28 @@ export default function EventsPage() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchData = () => {
-      setTimeout(() => {
-        setEvents(mockEvents);
-        setIsLoading(false);
-      }, 1500);
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('date', { ascending: false }); // Show newest events first
+
+      if (error) {
+        console.error("Error fetching events data:", error);
+      } else if (data) {
+        const sanitizedData = data.map(event => ({
+            ...event,
+            imageUrls: (event.imageUrls && event.imageUrls.length > 0) ? event.imageUrls : [dummyImage],
+            // Dynamically determine the category based on the date
+            category: new Date(event.date) > new Date() ? "Upcoming" : "Past Event",
+            contents: event.contents || "No description available."
+        }));
+        setEvents(sanitizedData);
+      }
+      setIsLoading(false);
     };
-    fetchData();
+    fetchEvents();
   }, []);
 
   return (
@@ -95,7 +112,7 @@ export default function EventsPage() {
       <section className="w-full py-24 px-6">
         <div className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {isLoading
-            ? Array.from({ length: 4 }).map((_, index) => <EventCardSkeleton key={index} />)
+            ? Array.from({ length: 6 }).map((_, index) => <EventCardSkeleton key={index} />)
             : events.map((event) => <EventCard key={event.id} event={event} />)
           }
         </div>

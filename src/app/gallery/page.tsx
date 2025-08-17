@@ -5,59 +5,55 @@ import * as React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Camera } from "lucide-react";
+import { Camera, ArrowRight } from "lucide-react";
+import { supabase } from "@/lib/supabase"; // Import the Supabase client
+import { Button } from "@/components/ui/button";
 
 // Define the structure of a Gallery Album
 type Album = {
   id: number;
   title: string;
-  images: string[];
+  imageUrls: string[]; // This should match your Supabase column name
 };
 
-// --- Mock Data ---
-const mockAlbums: Album[] = [
-  { id: 1, title: "Annual Day 2024", images: ["https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2069&auto=format&fit=crop", "https://images.unsplash.com/photo-1519167758481-83f550bb49b6?q=80&w=2070&auto=format&fit=crop", "https://images.unsplash.com/photo-1540575467063-178a50c2df87?q=80&w=2070&auto=format&fit=crop"] },
-  { id: 2, title: "Sports Fest", images: ["https://images.unsplash.com/photo-1579952363873-27f3bade974d?q=80&w=1935&auto=format&fit=crop", "https://images.unsplash.com/photo-1541250848049-b9f71362cb36?q=80&w=1887&auto=format&fit=crop"] },
-  { id: 3, title: "Art Workshop", images: ["https://images.unsplash.com/photo-1513364776144-60967b0f800f?q=80&w=2071&auto=format&fit=crop", "https://images.unsplash.com/photo-1581292336312-5c746b962a26?q=80&w=1887&auto=format&fit=crop", "https://images.unsplash.com/photo-1581292336312-5c746b962a26?q=80&w=1887&auto=format&fit=crop", "https://images.unsplash.com/photo-1515419682768-937965b81a2c?q=80&w=2070&auto=format&fit=crop"] },
-  { id: 4, title: "Science Fair", images: ["https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1928&auto=format&fit=crop", "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?q=80&w=1925&auto=format&fit=crop", "https://images.unsplash.com/photo-1554475901-4538ddfbccc2?q=80&w=2072&auto=format&fit=crop"] },
-  { id: 5, title: "Community Drive", images: ["https://images.unsplash.com/photo-1618423407341-a17f7b3e10a2?q=80&w=2070&auto=format&fit=crop", "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=2070&auto=format&fit=crop"] },
-  { id: 6, title: "Graduation Day", images: ["https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2070&auto=format&fit=crop", "https://images.unsplash.com/photo-1627556704290-2b1f5853ff38?q=80&w=1920&auto=format&fit=crop", "https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=2070&auto=format&fit=crop"] },
+// --- Dummy Images for Fallback ---
+const dummyImages = [
+    "https://placehold.co/600x800/F97316/FFFFFF?text=Image+1",
+    "https://placehold.co/800x600/FBBF24/FFFFFF?text=Image+2",
+    "https://placehold.co/600x600/EF4444/FFFFFF?text=Image+3",
 ];
-// --- End Mock Data ---
+// --- End Dummy Images ---
 
 
 // A reusable component for the loading skeleton
 const AlbumCardSkeleton = () => (
-    <div className="break-inside-avoid mb-8">
-        <Skeleton className="w-full h-80 rounded-lg" />
-    </div>
+    <Skeleton className="w-full h-80 rounded-lg" />
 );
 
-// The new, enhanced Album Card component
+// The new, re-designed "Polaroid" style Album Card component
 const AlbumCard = ({ album }: { album: Album }) => (
     <Dialog>
         <DialogTrigger asChild>
-            <div className="group relative break-inside-avoid mb-8 cursor-pointer overflow-hidden rounded-lg shadow-lg">
-                <div className="relative w-full h-80">
-                    {album.images.slice(0, 3).map((image, index) => (
+            <div className="group relative break-inside-avoid mb-8 cursor-pointer">
+                <div className="relative bg-white p-4 pb-16 rounded-lg shadow-md transition-transform duration-300 transform hover:-translate-y-2 hover:rotate-3 hover:shadow-xl">
+                    <div className="overflow-hidden rounded-md">
                         <img
-                            key={index}
-                            src={image}
-                            alt={`${album.title} preview ${index + 1}`}
-                            className="absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out transform group-hover:rotate-0 group-hover:scale-100"
-                            style={{
-                                transform: `rotate(${(index - 1) * 8}deg) scale(${1 - index * 0.05})`,
-                                zIndex: 3 - index,
-                            }}
+                            src={album.imageUrls[0]} // Use the first image as the cover
+                            alt={album.title}
+                            className="w-full h-auto object-cover transition-transform duration-500 ease-in-out transform group-hover:scale-105"
                         />
-                    ))}
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-0 left-0 p-6 text-white">
-                    <h3 className="text-2xl font-bold">{album.title}</h3>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-slate-300">
-                        <Camera size={16} />
-                        <span>{album.images.length} Photos</span>
+                    </div>
+                    <div className="absolute bottom-4 left-4 right-4 text-center">
+                        <h3 className="text-lg font-semibold text-slate-700 font-serif">{album.title}</h3>
+                         <div className="flex items-center justify-center gap-2 mt-1 text-xs text-slate-500">
+                            <Camera size={14} />
+                            <span>{album.imageUrls.length} Photos</span>
+                        </div>
+                    </div>
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                        <Button variant="outline" className="text-white bg-transparent border-white hover:bg-white hover:text-black">
+                            View Album <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
                     </div>
                 </div>
             </div>
@@ -68,7 +64,7 @@ const AlbumCard = ({ album }: { album: Album }) => (
             </DialogHeader>
             <Carousel className="w-full">
                 <CarouselContent>
-                    {album.images.map((image, index) => (
+                    {album.imageUrls.map((image, index) => (
                         <CarouselItem key={index}>
                             <img src={image} alt={`${album.title} image ${index + 1}`} className="w-full h-auto object-contain rounded-md max-h-[70vh]" />
                         </CarouselItem>
@@ -87,13 +83,27 @@ export default function GalleryPage() {
   const [isLoading, setIsLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const fetchData = () => {
-      setTimeout(() => {
-        setAlbums(mockAlbums);
-        setIsLoading(false);
-      }, 1500);
+    const fetchAlbums = async () => {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from('gallery_albums')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (error) {
+        console.error("Error fetching gallery data:", error);
+      } else if (data) {
+        // Sanitize data to provide dummy images for albums with no images
+        const sanitizedData = data.map(album => ({
+            ...album,
+            imageUrls: (album.imageUrls && album.imageUrls.length > 0) ? album.imageUrls : dummyImages,
+        }));
+        setAlbums(sanitizedData);
+      }
+      setIsLoading(false);
     };
-    fetchData();
+
+    fetchAlbums();
   }, []);
 
   return (
@@ -109,12 +119,12 @@ export default function GalleryPage() {
         </div>
       </section>
 
-      {/* Masonry Gallery Grid */}
+      {/* Gallery Grid */}
       <section className="w-full py-24 px-6">
         <div className="container">
-            <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                  {isLoading
-                    ? Array.from({ length: 6 }).map((_, index) => <AlbumCardSkeleton key={index} />)
+                    ? Array.from({ length: 8 }).map((_, index) => <AlbumCardSkeleton key={index} />)
                     : albums.map((album) => <AlbumCard key={album.id} album={album} />)
                  }
             </div>

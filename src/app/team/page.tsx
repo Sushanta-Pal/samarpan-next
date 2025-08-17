@@ -10,68 +10,76 @@ import Link from "next/link";
 
 // Define the structure of a Team Member profile
 type TeamMember = {
-  id: number;
+  id: string;
   name: string;
   role: string;
   imageUrl: string;
   linkedinUrl?: string;
 };
 
-// --- Mock Data ---
-const mockTeamData: TeamMember[] = [
-    // Top 2 (Leadership)
-    { id: 1, name: "Aarav Sharma", role: "President", imageUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 2, name: "Diya Patel", role: "Vice President", imageUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1888&auto=format&fit=crop", linkedinUrl: "#" },
-    // Next 4 (Core Team)
-    { id: 3, name: "Rohan Kumar", role: "Lead Developer", imageUrl: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=2071&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 4, name: "Isha Gupta", role: "Marketing Head", imageUrl: "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 5, name: "Arjun Singh", role: "Event Coordinator", imageUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?q=80&w=2070&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 6, name: "Meera Reddy", role: "Creative Designer", imageUrl: "https://images.unsplash.com/photo-1542596768-5d1d21f1cf98?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
-    // General Members
-    { id: 7, name: "Kabir Khan", role: "Finance Manager", imageUrl: "https://images.unsplash.com/photo-1590086782792-42dd2350140d?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 8, name: "Zara Ali", role: "Volunteer Lead", imageUrl: "https://images.unsplash.com/photo-1488426862026-39b533079b33?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 9, name: "Anika Rao", role: "Content Writer", imageUrl: "https://images.unsplash.com/photo-1521119989659-a83eee488004?q=80&w=1923&auto=format&fit=crop", linkedinUrl: "#" },
-    { id: 10, name: "Vivaan Joshi", role: "Photographer", imageUrl: "https://images.unsplash.com/photo-1522556189639-b150ed9c4331?q=80&w=1887&auto=format&fit=crop", linkedinUrl: "#" },
+// --- Real Data Integration ---
+const teamDataRaw = [
+    { "id": "m-1", "name": "Om Prakash Jha", "role": "Founder & Mentor", "imageFormat": "jpg", "linkedinUrl": "#" },
+    { "id": "m-2", "name": "Subhajit Das", "role": "Advisor", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-3", "name": "Soumyadeep Taladhi", "role": "Student Representative", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-4", "name": "Rahul Gope", "role": "Student Representative", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-5", "name": "Kumar Abhishek", "role": "Co Student Representative", "imageFormat": "JPG", "linkedinUrl": "#" },
+    { "id": "m-6", "name": "Harsh Kumar", "role": "Co Student Representative", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-7", "name": "Oindrila Sengupta", "role": "Mentor Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-8", "name": "Prem Kumar", "role": "Mentor Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-9", "name": "Rupayan Das", "role": "Mentor Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-10", "name": "Priyajit Das", "role": "Teaching Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-11", "name": "Tithi Das", "role": "Teaching Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-12", "name": "Saikat Bhattacharya", "role": "Teaching Head", "imageFormat": "jpg", "linkedinUrl": "#" },
+    { "id": "m-13", "name": "Tamanna Parween", "role": "Volunteer Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-14", "name": "Shubham Kumar", "role": "Volunteer Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-15", "name": "Aditya Srivastava", "role": "Volunteer Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-16", "name": "Subhajit Pramanick", "role": "Treasurer", "imageFormat": "png", "linkedinUrl": "#" },
+    { "id": "m-17", "name": "Ashis Kumar", "role": "Treasurer", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-18", "name": "Ranit Mal", "role": "PR & Management Lead", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-19", "name": "Sachin Kumar", "role": "PR & Management Lead", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-20", "name": "Jahanvi chhajer", "role": "PR & Management Lead", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-21", "name": "Abheek Banerje", "role": "Media Head", "imageFormat": "jpg", "linkedinUrl": "#" },
+    { "id": "m-22", "name": "Anusrita Saha", "role": "Creative Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-23", "name": "Sushanta Pal", "role": "Web Master", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-24", "name": "Shreya Mitra", "role": "Cultural Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-25", "name": "Srijani Bose", "role": "Cultural Head", "imageFormat": "jpeg", "linkedinUrl": "#" },
+    { "id": "m-26", "name": "Alapan Das", "role": "Cultural Head", "imageFormat": "jpg", "linkedinUrl": "#" }
 ];
-// --- End Mock Data ---
+
+const teamData: TeamMember[] = teamDataRaw.map(member => ({
+    ...member,
+    imageUrl: `/${member.id}.${member.imageFormat.toLowerCase()}`
+}));
+// --- End Data Integration ---
 
 
 // The new, re-designed Team Card component with 3D effect
 const TeamCard = ({ member, size = 'normal' }: { member: TeamMember, size?: 'normal' | 'large' }) => {
-    const cardSize = size === 'large' ? 'w-64 h-80' : 'w-60 h-72';
+    const cardSize = size === 'large' ? 'w-64' : 'w-60';
+    const imageSize = size === 'large' ? 'w-36 h-36' : 'w-32 h-32';
+    
     return (
-        <div className={cn("group relative rounded-xl shadow-lg transition-transform duration-500 transform-style-3d hover:-translate-y-2", cardSize)}>
-            {/* Card Backside */}
-            <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-orange-500 to-yellow-400 rounded-xl backface-hidden" />
-
-            {/* Card Frontside */}
-            <div className="absolute inset-0 w-full h-full bg-white rounded-xl backface-hidden transform group-hover:rotate-y-180 transition-transform duration-500">
-                <div className="flex flex-col items-center justify-center h-full">
-                    <img 
-                        src={member.imageUrl} 
-                        alt={member.name} 
-                        className="w-32 h-32 rounded-full object-cover border-4 border-slate-100"
-                    />
-                    <div className="mt-4 text-center">
-                        <h3 className="text-lg font-semibold text-slate-800">{member.name}</h3>
-                        <p className="text-sm text-orange-600">{member.role}</p>
+        <div className={cn("group relative pt-20", cardSize)}>
+            <div className="relative bg-white rounded-xl shadow-lg transition-transform duration-300 transform group-hover:scale-105">
+                <div className="absolute -top-16 left-1/2 -translate-x-1/2 transition-transform duration-300 transform group-hover:-translate-y-2">
+                    <div className={cn("rounded-full overflow-hidden border-4 border-white shadow-md", imageSize)}>
+                        <img 
+                            src={member.imageUrl} 
+                            alt={member.name} 
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
                     </div>
+                     {member.linkedinUrl && (
+                        <Link href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="absolute -bottom-2 -right-2 p-2 bg-slate-800 rounded-full text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform scale-0 group-hover:scale-100 hover:bg-orange-500">
+                            <Linkedin className="h-5 w-5" />
+                        </Link>
+                    )}
                 </div>
-            </div>
-             {/* Card Frontside - Hover Content */}
-            <div className="absolute inset-0 w-full h-full bg-black/70 rounded-xl backface-hidden flex flex-col items-center justify-center text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                 <img 
-                    src={member.imageUrl} 
-                    alt={member.name} 
-                    className="w-24 h-24 rounded-full object-cover border-4 border-orange-500/50"
-                />
-                <h3 className="mt-4 text-xl font-bold">{member.name}</h3>
-                <p className="text-md text-yellow-400">{member.role}</p>
-                {member.linkedinUrl && (
-                    <Link href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="mt-4">
-                        <Linkedin className="h-8 w-8 hover:text-yellow-400 transition-colors" />
-                    </Link>
-                )}
+                <div className="pt-20 pb-6 px-4 text-center">
+                    <h3 className="text-lg font-semibold text-slate-800">{member.name}</h3>
+                    <p className="text-sm text-orange-600">{member.role}</p>
+                </div>
             </div>
         </div>
     );
@@ -79,7 +87,15 @@ const TeamCard = ({ member, size = 'normal' }: { member: TeamMember, size?: 'nor
 
 // Skeleton loader to match the new card
 const TeamCardSkeleton = () => (
-    <Skeleton className="w-60 h-72 rounded-xl" />
+    <div className="w-60 pt-20">
+        <div className="relative bg-white rounded-xl shadow-lg h-52">
+             <Skeleton className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 rounded-full" />
+             <div className="pt-20 pb-6 px-4 text-center space-y-2">
+                <Skeleton className="h-6 w-3/4 mx-auto" />
+                <Skeleton className="h-4 w-1/2 mx-auto" />
+            </div>
+        </div>
+    </div>
 );
 
 // A helper component to render a section title
@@ -90,16 +106,13 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     </div>
 );
 
-// Redesigned component for the core team layout
+// Component for the circular core team layout
 const CoreTeamLayout = ({ members }: { members: TeamMember[] }) => {
-    if (members.length !== 4) return null;
+    if (members.length < 1) return null;
 
     return (
         <div className="relative py-12 hidden lg:flex justify-center items-center">
-            {/* Decorative background circle */}
             <div className="absolute w-[600px] h-[600px] bg-slate-100 rounded-full" />
-            
-            {/* 2x2 Grid for perfect centering and distribution */}
             <div className="relative grid grid-cols-2 gap-x-48 gap-y-12">
                 {members.map((member) => (
                     <TeamCard key={member.id} member={member} />
@@ -117,14 +130,14 @@ export default function TeamPage() {
   React.useEffect(() => {
     const fetchData = () => {
       setTimeout(() => {
-        setTeam(mockTeamData);
+        setTeam(teamData);
         setIsLoading(false);
       }, 1500);
     };
     fetchData();
   }, []);
 
-  const renderTeamSection = (members: TeamMember[], size?: 'large' | 'normal') => (
+  const renderTeamSection = (members: TeamMember[], size?: 'normal' | 'large') => (
       members.map((member) => <TeamCard key={member.id} member={member} size={size} />)
   );
 
@@ -174,51 +187,86 @@ export default function TeamPage() {
       {/* Team Sections */}
       <section className="w-full py-24 px-6">
         <div className="container space-y-24">
-          {/* Leadership Section */}
-          {isLoading ? (
-            <div className="flex justify-center gap-8">
-              <TeamCardSkeleton />
-              <TeamCardSkeleton />
-            </div>
-          ) : (
-            team.length > 0 && (
-              <div>
-                <SectionTitle>Leadership</SectionTitle>
-                <div className="flex flex-wrap justify-center gap-8">
-                  {renderTeamSection(team.slice(0, 2), 'large')}
+            {isLoading ? (
+                <div className="flex justify-center gap-8 flex-wrap">
+                    {Array.from({ length: 12 }).map((_, index) => <TeamCardSkeleton key={index} />)}
                 </div>
-              </div>
-            )
-          )}
+            ) : (
+                <>
+                    {/* Founder & Advisor */}
+                    <div>
+                        <SectionTitle>Founder & Advisor</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(0, 2), 'large')}
+                        </div>
+                    </div>
 
-          {/* Core Team Section */}
-          {isLoading ? (
-             <div className="flex justify-center gap-8 flex-wrap">
-              {Array.from({ length: 4 }).map((_, index) => <TeamCardSkeleton key={index} />)}
-            </div>
-          ) : (
-            team.length > 2 && (
-              <div>
-                <SectionTitle>Core Team</SectionTitle>
-                <CoreTeamLayout members={team.slice(2, 6)} />
-                <div className="flex flex-wrap justify-center gap-8 lg:hidden">
-                  {renderTeamSection(team.slice(2, 6))}
-                </div>
-              </div>
-            )
-          )}
+                    {/* Student Representatives */}
+                    <div>
+                        <SectionTitle>Student Representatives</SectionTitle>
+                        <CoreTeamLayout members={team.slice(2, 6)} />
+                        <div className="flex flex-wrap justify-center gap-8 lg:hidden">
+                            {renderTeamSection(team.slice(2, 6))}
+                        </div>
+                    </div>
 
-          {/* General Members Section */}
-          {isLoading ? null : (
-            team.length > 6 && (
-              <div>
-                <SectionTitle>Our Members</SectionTitle>
-                <div className="flex flex-wrap justify-center gap-8">
-                  {renderTeamSection(team.slice(6))}
-                </div>
-              </div>
-            )
-          )}
+                    {/* Mentor Heads */}
+                    <div>
+                        <SectionTitle>Mentor Heads</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(6, 9))}
+                        </div>
+                    </div>
+                    
+                    {/* Teaching Heads */}
+                    <div>
+                        <SectionTitle>Teaching Heads</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(9, 12))}
+                        </div>
+                    </div>
+
+                    {/* Volunteer Heads */}
+                    <div>
+                        <SectionTitle>Volunteer Heads</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(12, 15))}
+                        </div>
+                    </div>
+                    
+                    {/* Treasurers */}
+                    <div>
+                        <SectionTitle>Treasurers</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(15, 17))}
+                        </div>
+                    </div>
+
+                    {/* PR & Management */}
+                    <div>
+                        <SectionTitle>PR & Management</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(17, 20))}
+                        </div>
+                    </div>
+
+                    {/* Media, Creative, Web */}
+                     <div>
+                        <SectionTitle>Media, Creative & Web</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(20, 23))}
+                        </div>
+                    </div>
+
+                    {/* Cultural Heads */}
+                    <div>
+                        <SectionTitle>Cultural Heads</SectionTitle>
+                        <div className="flex flex-wrap justify-center gap-8">
+                            {renderTeamSection(team.slice(23, 26))}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
       </section>
     </main>

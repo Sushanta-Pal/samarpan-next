@@ -12,7 +12,7 @@ export default function HomePage() {
     <main className="flex flex-col items-center overflow-x-hidden">
       {/* Hero Section */}
       <section
-        className="w-full h-screen bg-cover bg-center flex flex-col items-center justify-center text-center text-white relative"
+        className="w-full h-screen bg-cover bg-center bg-fixed flex flex-col items-center justify-center text-center text-white relative"
         style={{ backgroundImage: `url('/hero-background.jpg')` }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/70" />
@@ -32,7 +32,7 @@ export default function HomePage() {
       </section>
 
       {/* Social Message Section */}
-      <section className="w-full max-w-5xl text-center py-24 px-6">
+      <section className="w-full max-w-5xl text-center py-24 px-6 bg-white">
         <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-800">
           ALL CHILDREN DESERVE AN OPPORTUNITY TO SUCCEED IN LIFE
         </h2>
