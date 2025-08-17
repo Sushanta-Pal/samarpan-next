@@ -2,6 +2,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Calendar, Info } from "lucide-react";
@@ -19,6 +20,11 @@ type DetailedEvent = {
   category?: "Past Event" | "Upcoming";
 };
 
+// Define an interface for the page props to satisfy TypeScript
+interface EventDetailPageProps {
+    params: { id: string };
+}
+
 // --- Dummy Images for Fallback ---
 const dummyImages = [
     "https://placehold.co/1280x720/F97316/FFFFFF?text=Event+Image+1",
@@ -26,8 +32,8 @@ const dummyImages = [
     "https://placehold.co/1280x720/EF4444/FFFFFF?text=Event+Image+3",
 ];
 
-export default function EventDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params; // Destructure id from params to resolve Next.js warning
+export default function EventDetailPage({ params }: EventDetailPageProps) {
+  const { id } = params;
   const [event, setEvent] = React.useState<DetailedEvent | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -37,8 +43,8 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
       const { data, error } = await supabase
         .from('events')
         .select('*')
-        .eq('id', id) // Use the destructured id
-        .single(); // Fetch a single record
+        .eq('id', id)
+        .single();
 
       if (error) {
         console.error("Error fetching event data:", error);
@@ -58,7 +64,7 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
     if (id) {
         fetchEvent();
     }
-  }, [id]); // Use the destructured id in the dependency array
+  }, [id]);
 
   if (isLoading) {
     return (
@@ -139,7 +145,7 @@ export default function EventDetailPage({ params }: { params: { id: string } }) 
                     <CarouselContent>
                         {event.imageUrls.map((image, index) => (
                             <CarouselItem key={index}>
-                                <img src={image} alt={`${event.title} image ${index + 1}`} className="w-full h-auto object-cover aspect-video" />
+                                <Image src={image} alt={`${event.title} image ${index + 1}`} width={1280} height={720} className="w-full h-auto object-cover aspect-video" />
                             </CarouselItem>
                         ))}
                     </CarouselContent>
