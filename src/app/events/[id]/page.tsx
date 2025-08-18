@@ -1,156 +1,37 @@
 // src/app/events/[id]/page.tsx
-"use client";
-
 import * as React from "react";
-import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { Calendar, Info } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/lib/supabase";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import EventDetails from "@/components/EventDetails";
 
-// Define the structure of a Detailed Event
-type DetailedEvent = {
-  id: number;
-  title: string;
-  date: string;
-  contents: string;
-  imageUrls: string[];
-  category?: "Past Event" | "Upcoming";
-};
+// This function runs at build time to generate static pages for each event
+export async function generateStaticParams() {
+  const { data: events, error } = await supabase.from('events').select('id');
 
-// --- Dummy Images for Fallback ---
-const dummyImages = [
-    "https://placehold.co/1280x720/F97316/FFFFFF?text=Event+Image+1",
-    "https://placehold.co/1280x720/FBBF24/FFFFFF?text=Event+Image+2",
-    "https://placehold.co/1280x720/EF4444/FFFFFF?text=Event+Image+3",
-];
-
-export default function EventDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
-  const [event, setEvent] = React.useState<DetailedEvent | null>(null);
-  const [isLoading, setIsLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    const fetchEvent = async () => {
-      setIsLoading(true);
-      const { data, error } = await supabase
-        .from('events')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching event data:", error);
-        setEvent(null);
-      } else if (data) {
-        const sanitizedEvent = {
-            ...data,
-            imageUrls: (data.imageUrls && data.imageUrls.length > 0) ? data.imageUrls : dummyImages,
-            category: new Date(data.date) > new Date() ? "Upcoming" : "Past Event",
-            contents: data.contents || "No description available."
-        };
-        setEvent(sanitizedEvent);
-      }
-      setIsLoading(false);
-    };
-
-    if (id) {
-        fetchEvent();
-    }
-  }, [id]);
-
-  if (isLoading) {
-    return (
-        <div className="container py-20 space-y-8">
-            <Skeleton className="w-full h-80 rounded-lg" />
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div className="lg:col-span-2 space-y-4">
-                    <Skeleton className="h-10 w-3/4" />
-                    <Skeleton className="h-40 w-full" />
-                </div>
-                <Skeleton className="h-48 w-full" />
-            </div>
-        </div>
-    );
+  if (error || !events) {
+    return [];
   }
 
-  if (!event) {
+  return events.map((event) => ({
+    id: event.id.toString(),
+  }));
+}
+
+// This is the main page component, now a Server Component
+export default async function EventDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
+
+  // Fetch the specific event data on the server
+  const { data: event, error } = await supabase
+    .from('events')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !event) {
+    // A simple fallback for when an event is not found
     return <div className="text-center py-20">Event not found.</div>;
   }
-  
-  const formattedDate = new Date(event.date).toLocaleDateString("en-US", {
-        year: 'numeric', month: 'long', day: 'numeric'
-    });
 
-  return (
-    <main className="flex flex-col items-center bg-white">
-      {/* Event Hero Section */}
-      <section className="w-full h-80 bg-cover bg-center relative text-white flex items-center justify-center text-center">
-          <Image src={event.imageUrls[0]} alt={event.title} fill className="object-cover z-0" priority />
-          <div className="absolute inset-0 bg-black/60" />
-          <div className="container relative z-10">
-              {event.category && (
-                  <Badge variant={event.category === 'Upcoming' ? 'default' : 'secondary'} className={event.category === 'Upcoming' ? 'bg-orange-500 text-white mb-4' : 'mb-4'}>
-                      {event.category}
-                  </Badge>
-              )}
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">{event.title}</h1>
-          </div>
-      </section>
-
-      {/* Event Content */}
-      <section className="w-full py-16 px-6 bg-slate-50">
-        <div className="container grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Main Description */}
-            <div className="lg:col-span-2">
-                <h2 className="text-3xl font-bold mb-4 text-slate-800">About the Event</h2>
-                <div className="prose max-w-none text-muted-foreground leading-relaxed">
-                    <p>{event.contents}</p>
-                </div>
-            </div>
-
-            {/* Details Card */}
-            <div className="lg:sticky top-24 h-fit">
-                <Card>
-                    <CardHeader className="flex flex-row items-center gap-4">
-                        <Info className="h-6 w-6 text-orange-500" />
-                        <CardTitle>Details</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <Calendar className="h-5 w-5 text-muted-foreground" />
-                            <div>
-                                <p className="font-semibold">Date</p>
-                                <p className="text-muted-foreground">{formattedDate}</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-        </div>
-      </section>
-
-      {/* Gallery Section */}
-      {event.imageUrls.length > 0 && (
-        <section className="w-full py-16 px-6">
-            <div className="container">
-                <h2 className="text-3xl font-bold mb-8 text-center text-slate-800">Event Gallery</h2>
-                <Carousel className="w-full max-w-4xl mx-auto rounded-lg overflow-hidden shadow-lg">
-                    <CarouselContent>
-                        {event.imageUrls.map((image, index) => (
-                            <CarouselItem key={index}>
-                                <Image src={image} alt={`${event.title} image ${index + 1}`} width={1280} height={720} className="w-full h-auto object-cover aspect-video" />
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="left-4" />
-                    <CarouselNext className="right-4" />
-                </Carousel>
-            </div>
-        </section>
-      )}
-    </main>
-  );
+  // Pass the fetched data to the client component for rendering
+  return <EventDetails event={event} />;
 }
