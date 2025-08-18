@@ -17,8 +17,9 @@ export async function generateStaticParams() {
 }
 
 // This is the main page component, now a Server Component
-export default async function EventDetailPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+// The props type is now defined inline to resolve the TypeScript error
+export default async function EventDetailPage(props: { params: Promise<{ id: string }> }) {
+  const { id } = await props.params; // ✅ await the params
 
   // Fetch the specific event data on the server
   const { data: event, error } = await supabase
@@ -28,10 +29,8 @@ export default async function EventDetailPage({ params }: { params: { id: string
     .single();
 
   if (error || !event) {
-    // A simple fallback for when an event is not found
     return <div className="text-center py-20">Event not found.</div>;
   }
 
-  // Pass the fetched data to the client component for rendering
   return <EventDetails event={event} />;
 }
